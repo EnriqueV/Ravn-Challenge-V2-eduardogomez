@@ -35,6 +35,13 @@ export class UsersController {
         return u;
     }
 
+    @Get('login/:email/:password')
+    async clientevalidacion(@Param() params): Promise<User> {
+        const cliente = await this._userService.validateUser(params.email, params.password);
+        return cliente;
+    }
+
+
 
 
 }

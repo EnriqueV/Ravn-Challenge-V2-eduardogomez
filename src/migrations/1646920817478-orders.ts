@@ -17,6 +17,8 @@ export class orders1646920817478 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment'
           },
           {
             name: 'code',

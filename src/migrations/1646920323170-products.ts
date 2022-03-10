@@ -17,6 +17,8 @@ export class products1646920323170 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment'
           },
           {
             name: 'name',
@@ -62,6 +64,8 @@ export class products1646920323170 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment'
           },
           {
             name: 'url',

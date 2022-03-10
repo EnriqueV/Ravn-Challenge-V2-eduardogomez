@@ -5,7 +5,7 @@ import { UserDTO } from '../dto/user.dto';
 import { User } from '../users.entity';
 import { UserRepository } from '../user.repository';
 import { getManager } from 'typeorm';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
     private readonly manager = getManager();
@@ -50,6 +50,32 @@ export class UsersService {
         return saveUser;
 
     }
+
+     /*=============================================================================
+        validate user
+    =============================================================================*/
+    async validateUser(email: string, password: string): Promise<User> {
+
+        const cliente = await this._userRepository.findOne({
+            where: {
+                email: email,
+            }
+        });
+
+
+        const isMatch = await bcrypt.compare(password, cliente.password);
+
+
+
+        if (!cliente || !isMatch) {
+            throw new NotFoundException('bad credentials');
+        }
+
+        return cliente;
+    }
+
+  
+
 
 
 
