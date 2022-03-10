@@ -1,33 +1,64 @@
-/* eslint-disable prettier/prettier */
-import * as fs from 'fs';
-import  {parse} from 'dotenv';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+
+require('dotenv').config();
 
 export class ConfigService {
-    private readonly envConfig: {[key: string]: string};
+  constructor(private env: { [key: string]: string | undefined }) {}
 
-    constructor() {
-        const isDevelopmentEnv = process.env.NODE_ENV !== "production";
-        
-        
-        if(isDevelopmentEnv){
-            const envFilePath = __dirname + '/../../.env';
-            const existsPath = fs.existsSync(envFilePath);
-
-            if(!existsPath){
-                console.log('.env file does not exist');
-                process.exit(0);
-            }
-
-            this.envConfig = parse(fs.readFileSync(envFilePath));
-
-        } else {
-            this.envConfig = {
-                PORT: process.env.PORT,
-            }
-        }
+  private getValue(key: string, throwOnMissing = true): string {
+    const value = this.env[key];
+    if (!value && throwOnMissing) {
+      throw new Error(`config error - missing env.${key}`);
     }
 
-    get(key: string): string {
-        return this.envConfig[key];
-    }
+    return value;
+  }
+
+  public ensureValues(keys: string[]) {
+    keys.forEach((k) => this.getValue(k, true));
+    return this;
+  }
+
+  public getPort() {
+    return this.getValue('PORT', true);
+  }
+
+  public isProduction() {
+    const mode = this.getValue('MODE', false);
+    return mode != 'DEV';
+  }
+
+  public getTypeOrmConfig(): TypeOrmModuleOptions {
+    return {
+      ssl: this.isProduction(),
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
+      type: 'postgres' as 'postgres',
+      host: this.getValue('POSTGRES_HOST'),
+      username: this.getValue('POSTGRES_USER'),
+      password: this.getValue('POSTGRES_PASSWORD'),
+      database: this.getValue('POSTGRES_DATABASE'),
+      port: parseInt(this.getValue('POSTGRES_PORT')),
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      subscribers: [__dirname + '/../subscribers/*.subscriber{.ts,.js}'],
+      migrationsTableName: 'migrations',
+      migrations: [__dirname + '/../migrations/*.ts'],
+      cli: {
+        migrationsDir: __dirname + '/../migrations',
+      },
+    };
+  }
 }
+
+const configService = new ConfigService(process.env).ensureValues([
+  'POSTGRES_HOST',
+  'POSTGRES_PORT',
+  'POSTGRES_USER',
+  'POSTGRES_PASSWORD',
+  'POSTGRES_DATABASE',
+]);
+
+export { configService };
