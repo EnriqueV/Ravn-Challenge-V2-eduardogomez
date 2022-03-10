@@ -5,12 +5,18 @@ export class UserDTO {
     id: number;
 
     @IsNotEmpty()
-    alias: string;
+    name: string;
+
+    @IsNotEmpty()
+    lastname: string;
+
+    @IsNotEmpty()
+    is_active: boolean;
 
     @IsNotEmpty()
     email: string;
 
     @IsNotEmpty()
-    device_token: string;
+    password: string;
 
 }

@@ -3,6 +3,9 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 require('dotenv').config();
 
 export class ConfigService {
+  get(arg0: string): string | number {
+    throw new Error('Method not implemented.');
+  }
   constructor(private env: { [key: string]: string | undefined }) {}
 
   private getValue(key: string, throwOnMissing = true): string {

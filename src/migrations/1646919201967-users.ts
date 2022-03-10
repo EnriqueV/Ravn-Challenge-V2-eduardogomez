@@ -10,6 +10,8 @@ export class users1646919201967 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment'
           },
           {
             name: 'name',

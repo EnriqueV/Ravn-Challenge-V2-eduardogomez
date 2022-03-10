@@ -1,14 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Configuration } from  './config/config.key';
-import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { DatabaseModule } from './database/database.module';
-
+import { UsersModule} from './modules/users/users.module';
 @Module({
   imports: [
-    ConfigModule, DatabaseModule,
+    UsersModule,ConfigService, DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -16,8 +14,8 @@ import { DatabaseModule } from './database/database.module';
 export class AppModule {
   static port: number | string;
 
-  constructor(private readonly _configService: ConfigService) {
-    AppModule.port = this._configService.get(Configuration.PORT);
+  constructor() {
+    AppModule.port = process.env.PORT;
   }
 
 }
