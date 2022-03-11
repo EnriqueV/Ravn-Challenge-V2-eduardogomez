@@ -5,9 +5,10 @@ import { ConfigService } from './config/config.service';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule} from './modules/users/users.module';
 import { ProductsModule} from './modules/products/products.module';
+import { ProductImagesModule } from './modules/product-images/product-images.module';
 @Module({
   imports: [
-    UsersModule,ProductsModule,ConfigService, DatabaseModule,
+    UsersModule,ProductsModule,ProductImagesModule,ConfigService, DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
