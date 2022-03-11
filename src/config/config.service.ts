@@ -1,11 +1,9 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 export class ConfigService {
-  get(arg0: string): string | number {
-    throw new Error('Method not implemented.');
-  }
   constructor(private env: { [key: string]: string | undefined }) {}
 
   private getValue(key: string, throwOnMissing = true): string {
@@ -39,7 +37,7 @@ export class ConfigService {
           rejectUnauthorized: false,
         },
       },
-      type: 'postgres' as 'postgres',
+      type: 'postgres' as const,
       host: this.getValue('POSTGRES_HOST'),
       username: this.getValue('POSTGRES_USER'),
       password: this.getValue('POSTGRES_PASSWORD'),
