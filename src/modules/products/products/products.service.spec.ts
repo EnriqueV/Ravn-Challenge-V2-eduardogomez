@@ -65,7 +65,7 @@ describe('ProductsService', () => {
     });
   });
   describe('insertOne', () => {
-    it('should successfully insert a cat', () => {
+    it('should successfully insert a product', () => {
       const productInput = product;
       delete productInput.id;
       delete productInput.created;
