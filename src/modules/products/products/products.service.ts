@@ -4,17 +4,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, getManager } from 'typeorm';
+import { DeleteResult, getManager, Repository } from 'typeorm';
 import { Product } from '../products.entity';
 import { ProductDTO } from '../dto/products.dto';
 import { ProductInputDTO } from '../dto/product-input.dto';
-import { ProductRepository } from '../products.repository';
 @Injectable()
 export class ProductsService {
   private readonly manager = getManager();
   constructor(
     @InjectRepository(Product)
-    private readonly _productRepository: ProductRepository,
+    private readonly _productRepository: Repository<Product>,
   ) {}
 
   async get(id: number): Promise<ProductDTO> {

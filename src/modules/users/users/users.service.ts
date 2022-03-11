@@ -4,18 +4,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, getManager } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users.entity';
 import { UserDTO } from '../dto/user.dto';
-import { UserRepository } from '../user.repository';
 import { UserInputDTO } from '../dto/user-input.dto';
 @Injectable()
 export class UsersService {
   private readonly manager = getManager();
   constructor(
     @InjectRepository(User)
-    private readonly _userRepository: UserRepository,
+    private readonly _userRepository: Repository<User>,
   ) {}
 
   async get(id: number): Promise<UserDTO> {
