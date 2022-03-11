@@ -48,4 +48,36 @@ export class ProductsService {
         return saveProduct;
 
     }
+
+
+    async updateStatus(id:number, status:boolean) {
+
+        const updateCode = this.manager.query(`update products set status =${status} where id = $1`, [id])
+
+          if (updateCode) {
+              return 'update succesfull';
+          }
+
+          throw new BadRequestException('update error');
+}
+
+
+        async edit(id, producto: Product) {
+            const update = await this._productRepository.update({ id: id }, producto)
+            return update;
+        }
+
+
+    async deleteProduct(id){
+            const product = await this.manager.createQueryBuilder().delete().from(Product).where(
+                "id= :id", { id: id },
+            )
+                .execute();
+
+            return product;
+        }
+
+
+
+
 }

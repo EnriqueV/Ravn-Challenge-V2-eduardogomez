@@ -1,5 +1,4 @@
 import {Body, Controller,Get, Param, ParseIntPipe, Post  } from '@nestjs/common';
-import {  ProductDTO } from '../dto/products.dto';
 import {  Product } from '../products.entity';
 import {  ProductsService } from './products.service';
 import { getManager } from 'typeorm';
@@ -31,6 +30,28 @@ export class ProductsController {
           const p = await this._productService.create(product);
           return p;
       }
+
+
+      // endpoint get one 
+      @Get('updateStatus/:id/:status')
+      async updateStatus(@Param() params){
+        const product= await this._productService.updateStatus(params.id, params.status);
+        return product;
+    }
+
+
+    @Post('update/:id')
+    async updateProduct(@Param() params, @Body() product: Product) {
+        const update = await this._productService.edit(params.id, product);
+        return update;
+    }
+
+
+    @Get('delete/:id')
+    async deleteProduct(@Param() params){
+        const product = await this._productService.deleteProduct(params.id);
+        return product;
+    }
 
 
 
