@@ -1,83 +1,66 @@
-
-import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserDTO } from '../dto/user.dto';
-import { User } from '../users.entity';
-import { UserRepository } from '../user.repository';
 import { getManager } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { UserDTO } from '../dto/user.dto';
+import { UserRepository } from '../user.repository';
+import { UserInputDTO } from '../dto/user-input.dto';
 @Injectable()
 export class UsersService {
-    private readonly manager = getManager();
-    constructor(
-        @InjectRepository(UserRepository)
-        private readonly _userRepository: UserRepository,
+  private readonly manager = getManager();
+  constructor(
+    @InjectRepository(UserRepository)
+    private readonly _userRepository: UserRepository,
+  ) {}
 
-    ) { }
-
-
-    async get(id: number): Promise<User> {
-        if (!id) {
-            throw new BadRequestException('user id is not specified');
-        }
-
-        const user = await this._userRepository.findOne(
-            {
-                where:
-                    { id: id }
-            }
-        );
-        if (!user) {
-            throw new NotFoundException('user not found');
-        }
-
-        return user;
+  async get(id: number): Promise<UserDTO> {
+    if (!id) {
+      throw new BadRequestException('user id is not specified');
     }
 
-    async getAll(): Promise<User[]> {
-
-        const users: User[] = await this._userRepository.find({
-            where: { is_active: true }
-        });
-
-
-        return users
+    const user = await this._userRepository.findOne({
+      where: { id: id },
+    });
+    if (!user) {
+      throw new NotFoundException('user not found');
     }
 
+    return user;
+  }
 
-    async create(user: User): Promise<User> {
-        const saveUser: User = await this._userRepository.save(user);
-        return saveUser;
+  async getAll(): Promise<UserDTO[]> {
+    const users: UserDTO[] = await this._userRepository.find({
+      where: { is_active: true },
+    });
 
-    }
+    return users;
+  }
 
-     /*=============================================================================
+  async create(user: UserInputDTO): Promise<UserDTO> {
+    const saveUser: UserDTO = await this._userRepository.save(user);
+    return saveUser;
+  }
+
+  /*=============================================================================
         validate user
     =============================================================================*/
-    async validateUser(email: string, password: string): Promise<User> {
+  async validateUser(email: string, password: string): Promise<UserDTO> {
+    const cliente = await this._userRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
 
-        const cliente = await this._userRepository.findOne({
-            where: {
-                email: email,
-            }
-        });
+    const isMatch = await bcrypt.compare(password, cliente.password);
 
-
-        const isMatch = await bcrypt.compare(password, cliente.password);
-
-
-
-        if (!cliente || !isMatch) {
-            throw new NotFoundException('bad credentials');
-        }
-
-        return cliente;
+    if (!cliente || !isMatch) {
+      throw new NotFoundException('bad credentials');
     }
 
-  
-
-
-
-
-
+    return cliente;
+  }
 }
