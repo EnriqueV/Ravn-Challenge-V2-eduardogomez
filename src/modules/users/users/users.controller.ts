@@ -1,5 +1,5 @@
 
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller,Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { UserDTO } from '../dto/user.dto';
 import { User } from '../users.entity';
 import { UsersService } from './users.service';
@@ -23,7 +23,7 @@ export class UsersController {
 
     // endpoint get all users
     @Get('getAll')
-    async obtenerusuarios(): Promise<User[]> {
+    async allusers(): Promise<User[]> {
 
         const users = await this._userService.getAll();
         return users;
@@ -36,7 +36,7 @@ export class UsersController {
     }
 
     @Get('login/:email/:password')
-    async clientevalidacion(@Param() params): Promise<User> {
+    async uservalidation(@Param() params): Promise<User> {
         const cliente = await this._userService.validateUser(params.email, params.password);
         return cliente;
     }

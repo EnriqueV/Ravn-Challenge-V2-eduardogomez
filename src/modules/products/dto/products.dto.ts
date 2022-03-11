@@ -8,15 +8,18 @@ export class ProductDTO {
     name: string;
 
     @IsNotEmpty()
-    lastname: string;
+    description: string;
 
     @IsNotEmpty()
-    is_active: boolean;
+    price:number;
 
     @IsNotEmpty()
-    email: string;
+    discount:number; string;
 
     @IsNotEmpty()
-    password: string;
+    status: boolean;
+
+    @IsNotEmpty()
+    created: string;
 
 }
