@@ -4,8 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getManager } from 'typeorm';
+import { DeleteResult, getManager } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { User } from '../users.entity';
 import { UserDTO } from '../dto/user.dto';
 import { UserRepository } from '../user.repository';
 import { UserInputDTO } from '../dto/user-input.dto';
@@ -13,7 +14,7 @@ import { UserInputDTO } from '../dto/user-input.dto';
 export class UsersService {
   private readonly manager = getManager();
   constructor(
-    @InjectRepository(UserRepository)
+    @InjectRepository(User)
     private readonly _userRepository: UserRepository,
   ) {}
 

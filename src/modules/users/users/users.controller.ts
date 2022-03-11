@@ -6,15 +6,12 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
-import { getManager } from 'typeorm';
 import { UserDTO } from '../dto/user.dto';
-import { User } from '../users.entity';
+import { UserInputDTO } from '../dto/user-input.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  private readonly manager = getManager();
-
   constructor(private readonly _userService: UsersService) {}
 
   // endpoint get one user
@@ -26,19 +23,19 @@ export class UsersController {
 
   // endpoint get all users
   @Get('getAll')
-  async allusers(): Promise<User[]> {
+  async allusers(): Promise<UserDTO[]> {
     const users = await this._userService.getAll();
     return users;
   }
 
   @Post()
-  async save(@Body() user: User) {
+  async save(@Body() user: UserInputDTO) {
     const u = await this._userService.create(user);
     return u;
   }
 
   @Get('login/:email/:password')
-  async uservalidation(@Param() params): Promise<User> {
+  async uservalidation(@Param() params): Promise<UserDTO> {
     const cliente = await this._userService.validateUser(
       params.email,
       params.password,
