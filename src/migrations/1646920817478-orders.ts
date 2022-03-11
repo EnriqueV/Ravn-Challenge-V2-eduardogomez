@@ -2,7 +2,6 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
-  TableIndex,
   TableColumn,
   TableForeignKey,
 } from 'typeorm';
@@ -18,7 +17,7 @@ export class orders1646920817478 implements MigrationInterface {
             type: 'int',
             isPrimary: true,
             isGenerated: true,
-            generationStrategy: 'increment'
+            generationStrategy: 'increment',
           },
           {
             name: 'code',
@@ -60,6 +59,8 @@ export class orders1646920817478 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'image',

@@ -3,12 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigService } from './config/config.service';
 import { DatabaseModule } from './database/database.module';
-import { UsersModule} from './modules/users/users.module';
-import { ProductsModule} from './modules/products/products.module';
+import { UsersModule } from './modules/users/users.module';
+import { ProductsModule } from './modules/products/products.module';
 import { ProductImagesModule } from './modules/product-images/product-images.module';
 @Module({
   imports: [
-    UsersModule,ProductsModule,ProductImagesModule,ConfigService, DatabaseModule,
+    UsersModule,
+    ProductsModule,
+    ProductImagesModule,
+    ConfigService,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -19,5 +23,4 @@ export class AppModule {
   constructor() {
     AppModule.port = process.env.PORT;
   }
-
 }

@@ -1,14 +1,12 @@
-import { NestFactory } from '@nestjs/core';
-import express from 'express';
 import { join } from 'path';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core';
 import * as bodyParser from 'body-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: true
+    cors: true,
   });
   // api prefix
   app.setGlobalPrefix('api');
@@ -28,4 +26,3 @@ async function bootstrap() {
   await app.listen(AppModule.port);
 }
 bootstrap();
-
