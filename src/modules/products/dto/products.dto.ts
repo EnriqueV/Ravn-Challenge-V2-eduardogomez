@@ -1,25 +1,24 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class ProductDTO {
-    @IsNotEmpty()
-    id: number;
+  @IsNotEmpty()
+  id: number;
 
-    @IsNotEmpty()
-    name: string;
+  @IsNotEmpty()
+  name: string;
 
-    @IsNotEmpty()
-    description: string;
+  @IsNotEmpty()
+  description: string;
 
-    @IsNotEmpty()
-    price:number;
+  @IsNotEmpty()
+  price: number;
 
-    @IsNotEmpty()
-    discount:number; string;
+  @IsNotEmpty()
+  discount: number;
 
-    @IsNotEmpty()
-    status: boolean;
+  @IsNotEmpty()
+  status: boolean;
 
-    @IsNotEmpty()
-    created: string;
-
+  @IsNotEmpty()
+  created: string;
 }
