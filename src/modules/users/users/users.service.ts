@@ -6,17 +6,17 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { SendGridService } from '@anchan828/nest-sendgrid';
 import { User } from '../users.entity';
 import { UserDTO } from '../dto/user.dto';
 import { UserInputDTO } from '../dto/user-input.dto';
-import { SendGridService } from "@anchan828/nest-sendgrid";
 @Injectable()
 export class UsersService {
   private readonly manager = getManager();
   constructor(
     @InjectRepository(User)
     private readonly _userRepository: Repository<User>,
-    private readonly sendGrid: SendGridService
+    private readonly sendGrid: SendGridService,
   ) {}
 
   async get(id: number): Promise<UserDTO> {
@@ -66,113 +66,83 @@ export class UsersService {
     return cliente;
   }
 
-   /*=============================================================================
+  /*=============================================================================
         funcion para crear codigo
      =============================================================================*/
-     async getCode(email: string) {
+  async getCode(email: string) {
+    const c = await this._userRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
 
-      const c = await this._userRepository.findOne({
-          where: {
-              email: email
-          }
-      });
+    if (c != null) {
+      if (c.email) {
+        const code = Math.floor(100000 + Math.random() * 900000);
+        await this.mail(email, code);
 
-      if (c != null) {
+        const updateCode = this.manager.query(
+          `update clientes set code =${code} where email = $1`,
+          [email],
+        );
 
-          if (c.email) {
-              let code = Math.floor(100000 + Math.random() * 900000)
-              await this.mail(email, code);
+        if (updateCode) {
+          return 'update succesfull';
+        }
 
-              const updateCode = this.manager.query(`update clientes set code =${code} where email = $1`, [email])
-
-              if (updateCode) {
-                  return 'update succesfull';
-              }
-
-              throw new BadRequestException('error al actualizar');
-
-
-
-          } else {
-              throw new NotFoundException('correo no existe');
-          }
-
+        throw new BadRequestException('error al actualizar');
+      } else {
+        throw new NotFoundException('correo no existe');
       }
-
-      else {
-          throw new NotFoundException('Credenciales no validas');
-      }
-
+    } else {
+      throw new NotFoundException('Credenciales no validas');
+    }
   }
 
   /*=============================================================================
    funcion para validar codigo
 =============================================================================*/
   async validateCode(code: string) {
+    const c = await this._userRepository.findOne({
+      where: {
+        code: code,
+      },
+    });
 
-      const c = await this._userRepository.findOne({
-          where: {
-              code: code
-          }
-      });
-
-      if (c != null) {
-
-          if (c.code) {
-
-
-              return true;
-
-          } else {
-              throw new NotFoundException('codigo no existe');
-          }
-
+    if (c != null) {
+      if (c.code) {
+        return true;
+      } else {
+        throw new NotFoundException('codigo no existe');
       }
-
-      else {
-          throw new NotFoundException('Codigo no valido');
-      }
-
+    } else {
+      throw new NotFoundException('Codigo no valido');
+    }
   }
-
 
   /*=============================================================================
-    funcion para reestablecer contraseña
+    update password
  =============================================================================*/
   async updatePassword(correo: string, password: string) {
+    try {
+      const pass = String(password);
+      const hash = await bcrypt.hash(pass, 12);
+      const setPass = String(hash);
+      const email = String(correo);
+      const updateCode = this.manager.query(
+        `update clientes set password='${setPass}' where email = $1`,
+        [email],
+      );
 
-      const c = await this._userRepository.findOne({
-          where: {
-              correo: correo
-          }
-      });
-
-      try {
-          //listing messages in users mailbox 
-          let pass = String(password);
-          const hash = await bcrypt.hash(pass, 12);
-          let setPass = String(hash);
-          let email = String(correo);
-
-          console.log(setPass)
-
-          const updateCode = this.manager.query(`update clientes set password='${setPass}' where email = $1`, [email])
-
-          if (updateCode) {
-              return 'update succesfull';
-          }
-      } catch (err) {
-          throw new BadRequestException('error al actualizar');
+      if (updateCode) {
+        return 'update succesfull';
       }
-
-
-
-
-
+    } catch (err) {
+      throw new BadRequestException('error al actualizar');
+    }
   }
 
-
-   /*=============================================================================
+  /*=============================================================================
     send email
     ll
 
@@ -180,16 +150,12 @@ export class UsersService {
 
 
  =============================================================================*/
- async mail(email, code): Promise<void> {
-  await this.sendGrid.send({
-      to:email,
+  async mail(email, code): Promise<void> {
+    await this.sendGrid.send({
+      to: email,
       from: process.env.SENDER_EMAIL,
-      subject: " Reset password",
-      text: `Your security code is ${code}`
-  });
-}
-
-
-
-
+      subject: ' Reset password',
+      text: `Your security code is ${code}`,
+    });
+  }
 }

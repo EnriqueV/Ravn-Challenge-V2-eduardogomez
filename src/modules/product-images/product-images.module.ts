@@ -8,7 +8,6 @@ import { ProductImagesService } from './product-images/product-images.service';
   imports: [TypeOrmModule.forFeature([ProductRepository])],
   providers: [ProductImagesService],
   controllers: [ProductImagesController],
-  exports: [ProductImagesService]
+  exports: [ProductImagesService],
 })
 export class ProductImagesModule {}
-

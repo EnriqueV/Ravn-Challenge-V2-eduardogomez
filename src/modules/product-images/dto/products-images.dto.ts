@@ -1,13 +1,12 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class Image {
-    @IsNotEmpty()
-    id: number;
+  @IsNotEmpty()
+  id: number;
 
-    @IsNotEmpty()
-    url: string;
+  @IsNotEmpty()
+  url: string;
 
-    @IsNotEmpty()
-    productId: number;
-
+  @IsNotEmpty()
+  productId: number;
 }
