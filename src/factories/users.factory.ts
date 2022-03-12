@@ -19,6 +19,7 @@ export class UserFactory extends AbstractFactory<UserDTO> {
       password: input.password || faker.internet.password(),
       is_active: input.is_active || faker.datatype.boolean(),
       email: input.email || faker.internet.email(),
+      code: input.code,
     });
   }
 

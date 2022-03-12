@@ -18,4 +18,7 @@ export class UserDTO {
 
   @IsNotEmpty()
   password: string;
+
+  @IsNotEmpty()
+  code: string;
 }

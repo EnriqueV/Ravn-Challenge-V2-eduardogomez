@@ -31,16 +31,12 @@ export class ConfigService {
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     return {
-      ...(this.isProduction()
-        ? {
-            ssl: true,
-            extra: {
-              ssl: {
-                rejectUnauthorized: false,
-              },
-            },
-          }
-        : {}),
+      ssl: this.isProduction(),
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
       type: 'postgres' as const,
       host: this.getValue('POSTGRES_HOST'),
       username: this.getValue('POSTGRES_USER'),

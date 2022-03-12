@@ -26,4 +26,6 @@ export class User {
   @ApiProperty()
   @Column({ type: 'varchar' })
   email: string;
+  @Column({ type: 'varchar' })
+  code: string;
 }

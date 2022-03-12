@@ -15,4 +15,6 @@ export class UserInputDTO {
 
   @IsNotEmpty()
   password: string;
+  @IsNotEmpty()
+  code: string;
 }
